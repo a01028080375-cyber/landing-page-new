@@ -210,8 +210,9 @@
     }
 
     /* ── 반응형 ── */
-    @media (max-width: 380px) {
-      .nameplate { font-size: 1.05rem; }
+    @media (max-width: 500px) {
+      /* 3.8vw: 375px→14.25px(0.89rem), 320px→12.16px(0.76rem) — 긴 회사명도 한 줄 유지 */
+      .nameplate { font-size: clamp(0.75rem, 3.8vw, 1.1rem); }
       .actions { flex-direction: column; }
     }
 
