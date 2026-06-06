@@ -1,0 +1,17 @@
+# 운영체제
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# 에디터
+.vscode/
+.idea/
+*.swp
+*~
+
+# Claude Code
+.claude/
+
+# 임시 파일
+*.tmp
+*.log

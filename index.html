@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>민광엽 · AI 컨설턴트</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      background: #ffffff;
+      color: #333;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── 헤더 ── */
+    header {
+      background: #ffffff;
+      color: #1F3864;
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+
+    /* 프로필 사진 (선택 기능 — src 교체 후 아래 주석 제거) */
+    /*
+    .profile-photo {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255,255,255,0.35);
+      margin: 0 auto 20px;
+      display: block;
+    }
+    */
+
+    /* 사진 없을 때 이니셜 원형 */
+    .profile-initial {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #1F3864;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #1F3864;
+    }
+
+    /* 이름 · 직책 · 회사 — 한 줄 */
+    .nameplate {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #1F3864;
+    }
+
+    .nameplate .sep {
+      color: #333;
+      margin: 0 8px;
+      font-weight: 300;
+    }
+
+    /* 자기소개 */
+    .bio {
+      margin-top: 16px;
+      font-size: 0.93rem;
+      color: #333;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    /* ── 본문 컨테이너 ── */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 16px 48px;
+    }
+
+    /* 섹션 레이블 */
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #1F3864;
+      margin: 32px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #1F3864;
+    }
+
+    /* 경력 카드 */
+    .career-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .career-year {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #1F3864;
+      min-width: 44px;
+      padding-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .career-body { flex: 1; min-width: 0; }
+
+    .career-company {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1F3864;
+    }
+
+    .career-role {
+      font-size: 0.84rem;
+      color: #333;
+      margin-top: 2px;
+    }
+
+    .career-summary {
+      font-size: 0.83rem;
+      color: #333;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* ── 하단 버튼 ── */
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 15px 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: opacity 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:active { opacity: 0.72; transform: scale(0.97); }
+
+    .btn-email {
+      background: #1F3864;
+      color: #fff;
+    }
+
+    .btn-phone {
+      background: #fff;
+      color: #1F3864;
+      border: 2px solid #1F3864;
+    }
+
+    /* 헤더 안 전화 버튼 — 인라인 중앙 정렬 */
+    header .btn-phone {
+      display: inline-flex;
+      flex: none;
+      width: auto;
+      margin-top: 14px;
+    }
+
+    /* ── 복사 완료 토스트 ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #333;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 20px;
+      font-size: 0.84rem;
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── 반응형 ── */
+    @media (max-width: 380px) {
+      .nameplate { font-size: 1.05rem; }
+      .actions { flex-direction: column; }
+    }
+
+    @media (min-width: 600px) {
+      header { padding: 56px 40px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <!-- 프로필 사진 사용 시: 아래 주석을 풀고 profile-initial 블록을 삭제하세요
+    <img class="profile-photo" src="profile.jpg" alt="민광엽 프로필 사진">
+    -->
+    <div class="profile-initial">민</div>
+
+    <p class="nameplate">
+      민광엽<span class="sep">·</span>AI 컨설턴트<span class="sep">·</span>(주)에이아이파트너스
+    </p>
+
+    <button class="btn btn-phone" onclick="copyPhone()">
+      📋&nbsp;전화 걸기
+    </button>
+
+    <p class="bio">
+      20여 년간 IT·제조·유통 분야에서 디지털 전환 프로젝트를 이끌어 왔습니다.<br>
+      현재는 중소기업과 스타트업이 생성형 AI를 실무에 접목할 수 있도록<br>
+      전략 수립부터 현장 적용까지 함께합니다.<br>
+      "기술보다 현장, 도구보다 사람"을 원칙으로 일합니다.
+    </p>
+  </header>
+
+  <div class="container">
+
+    <p class="section-label">경력</p>
+
+    <!-- 최신 순 3건 — 연도·회사·직책·요약을 실제 내용으로 교체하세요 -->
+    <div class="career-card">
+      <span class="career-year">2022</span>
+      <div class="career-body">
+        <p class="career-company">(주)에이아이파트너스</p>
+        <p class="career-role">대표 · AI 컨설턴트</p>
+        <p class="career-summary">중소기업 AI 도입 전략 수립 및 생성형 AI 활용 교육·컨설팅 운영</p>
+      </div>
+    </div>
+
+    <div class="career-card">
+      <span class="career-year">2016</span>
+      <div class="career-body">
+        <p class="career-company">△△디지털솔루션</p>
+        <p class="career-role">이사 · DX 전략팀장</p>
+        <p class="career-summary">제조·유통사 50여 곳의 ERP·MES 클라우드 전환 프로젝트 총괄</p>
+      </div>
+    </div>
+
+    <div class="career-card">
+      <span class="career-year">2009</span>
+      <div class="career-body">
+        <p class="career-company">○○ICT그룹</p>
+        <p class="career-role">부장 · IT 기획팀</p>
+        <p class="career-summary">그룹사 통합 IT 인프라 구축 및 정보화 중장기 로드맵 수립 주관</p>
+      </div>
+    </div>
+
+    <p class="section-label">수상 경력</p>
+
+    <!-- 최대 3건 — 연도·수여기관·상명을 실제 내용으로 교체하세요 -->
+    <div class="career-card">
+      <span class="career-year">2022</span>
+      <div class="career-body">
+        <p class="career-company">우수기술상</p>
+        <p class="career-role">OO협회</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <!-- 이메일 주소를 실제 주소로 교체하세요 -->
+      <a class="btn btn-email" href="mailto:a01028080375@gmail.com">
+        ✉&nbsp;이메일 보내기
+      </a>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast">전화번호가 복사되었습니다</div>
+
+  <script>
+    function copyPhone() {
+      var phone = '010-2808-0375'; /* ← 실제 전화번호로 교체 */
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(phone).then(showToast);
+      } else {
+        var el = document.createElement('textarea');
+        el.value = phone;
+        el.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(el);
+        el.select();
+        try { document.execCommand('copy'); } catch(e) {}
+        document.body.removeChild(el);
+        showToast();
+      }
+    }
+    function showToast() {
+      var t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(function () { t.classList.remove('show'); }, 2500);
+    }
+  </script>
+
+</body>
+</html>
